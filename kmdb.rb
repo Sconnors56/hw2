@@ -75,7 +75,7 @@
 
 # Delete existing data, so you'll start fresh each time this script is run.
 # Use `Model.destroy_all` code.
-# TODO!
+# 
 
 # Generate models and tables, according to the domain model.
 # TODO!
@@ -100,3 +100,125 @@ puts ""
 
 # Query the cast data and loop through the results to display the cast output for each movie.
 # TODO!
+
+# FINAL SUBMISSION BELOW
+
+# Delete existing data
+Studio.destroy_all
+Movie.destroy_all
+Actor.destroy_all
+Role.destroy_all
+
+Rails.logger.info "------------------------"
+Rails.logger.info "----- FRESH START! -----"
+Rails.logger.info "------------------------"
+
+# Generate models and tables (run these commands separately in terminal before running this script)
+# rails generate model Studio name:string
+# rails generate model Movie title:string year_released:integer rated:string studio:references
+# rails generate model Actor name:string
+# rails generate model Role movie:references actor:references character_name:string
+# rails db:migrate
+
+# Insert data into the database
+warner_bros = Studio.new
+warner_bros["name"] = "Warner Bros."
+warner_bros.save
+
+batman_begins = Movie.new
+dark_knight = Movie.new
+dark_knight_rises = Movie.new
+
+batman_begins["title"] = "Batman Begins"
+batman_begins["year_released"] = 2005
+batman_begins["rated"] = "PG-13"
+batman_begins["studio_id"] = warner_bros["id"]
+batman_begins.save
+
+dark_knight["title"] = "The Dark Knight"
+dark_knight["year_released"] = 2008
+dark_knight["rated"] = "PG-13"
+dark_knight["studio_id"] = warner_bros["id"]
+dark_knight.save
+
+dark_knight_rises["title"] = "The Dark Knight Rises"
+dark_knight_rises["year_released"] = 2012
+dark_knight_rises["rated"] = "PG-13"
+dark_knight_rises["studio_id"] = warner_bros["id"]
+dark_knight_rises.save
+
+actors = [
+  {"name" => "Christian Bale"},
+  {"name" => "Michael Caine"},
+  {"name" => "Liam Neeson"},
+  {"name" => "Katie Holmes"},
+  {"name" => "Gary Oldman"},
+  {"name" => "Heath Ledger"},
+  {"name" => "Aaron Eckhart"},
+  {"name" => "Maggie Gyllenhaal"},
+  {"name" => "Tom Hardy"},
+  {"name" => "Joseph Gordon-Levitt"},
+  {"name" => "Anne Hathaway"}
+]
+
+actor_records = {}
+
+actors.each do |actor|
+  actor_record = Actor.new
+  actor_record["name"] = actor["name"]
+  actor_record.save
+  actor_records[actor["name"]] = actor_record
+end
+
+roles_data = [
+  { movie: batman_begins, actor: actor_records["Christian Bale"], character_name: "Bruce Wayne" },
+  { movie: batman_begins, actor: actor_records["Michael Caine"], character_name: "Alfred" },
+  { movie: batman_begins, actor: actor_records["Liam Neeson"], character_name: "Ra's Al Ghul" },
+  { movie: batman_begins, actor: actor_records["Katie Holmes"], character_name: "Rachel Dawes" },
+  { movie: batman_begins, actor: actor_records["Gary Oldman"], character_name: "Commissioner Gordon" },
+
+  { movie: dark_knight, actor: actor_records["Christian Bale"], character_name: "Bruce Wayne" },
+  { movie: dark_knight, actor: actor_records["Heath Ledger"], character_name: "Joker" },
+  { movie: dark_knight, actor: actor_records["Aaron Eckhart"], character_name: "Harvey Dent" },
+  { movie: dark_knight, actor: actor_records["Michael Caine"], character_name: "Alfred" },
+  { movie: dark_knight, actor: actor_records["Maggie Gyllenhaal"], character_name: "Rachel Dawes" },
+
+  { movie: dark_knight_rises, actor: actor_records["Christian Bale"], character_name: "Bruce Wayne" },
+  { movie: dark_knight_rises, actor: actor_records["Gary Oldman"], character_name: "Commissioner Gordon" },
+  { movie: dark_knight_rises, actor: actor_records["Tom Hardy"], character_name: "Bane" },
+  { movie: dark_knight_rises, actor: actor_records["Joseph Gordon-Levitt"], character_name: "John Blake" },
+  { movie: dark_knight_rises, actor: actor_records["Anne Hathaway"], character_name: "Selina Kyle" }
+]
+
+roles_data.each do |role|
+  role_record = Role.new
+  role_record["movie_id"] = role[:movie]["id"]
+  role_record["actor_id"] = role[:actor]["id"]
+  role_record["character_name"] = role[:character_name]
+  role_record.save
+end
+
+# Output movies
+puts "Movies"
+puts "======"
+puts ""
+
+movies = Movie.all
+movies.each do |movie|
+  studio = Studio.find_by({ "id" => movie["studio_id"] })
+  puts "#{movie["title"].ljust(24)} #{movie["year_released"].to_s.ljust(14)} #{movie["rated"].ljust(6)} #{studio["name"]}"
+end
+
+# Output top cast
+puts ""
+puts "Top Cast"
+puts "========"
+puts ""
+
+roles = Role.all
+roles.each do |role|
+  movie = Movie.find_by({ "id" => role["movie_id"] })
+  actor = Actor.find_by({ "id" => role["actor_id"] })
+  puts "#{movie["title"].ljust(24)} #{actor["name"].ljust(20)} #{role["character_name"]}"
+end
+
