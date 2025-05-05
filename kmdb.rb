@@ -214,7 +214,7 @@ roles = Role.all
 roles.each do |role|
   movie = Movie.find_by({ "id" => role["movie_id"] })
   actor = Actor.find_by({ "id" => role["actor_id"] })
-  puts "#{movie["title"].ljust(24)} #{actor["name"].ljust(20)} #{role["character_name"]}"
+  puts "#{movie["title"].ljust(24)} #{actor["name"].ljust(20)} #{role["character_name"]}" # used chatgpt for ljust command to fix spacing issues in the output so that it would match what was shown above
 end
 
 # Run rails runner kmdb.rb to execute this code
