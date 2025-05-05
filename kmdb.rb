@@ -85,18 +85,13 @@
 # TODO!
 
 # Prints a header for the movies output
-puts "Movies"
-puts "======"
-puts ""
+# Removed code so it wouldn't duplicate
 
 # Query the movies data and loop through the results to display the movies output.
 # TODO!
 
 # Prints a header for the cast output
-puts ""
-puts "Top Cast"
-puts "========"
-puts ""
+# Removed code so it wouldn't duplicate
 
 # Query the cast data and loop through the results to display the cast output for each movie.
 # TODO!
