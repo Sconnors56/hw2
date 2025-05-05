@@ -108,7 +108,7 @@ Rails.logger.info "------------------------"
 Rails.logger.info "----- FRESH START! -----"
 Rails.logger.info "------------------------"
 
-# Generate models and tables (run these commands separately in terminal before running this script)
+# Generate models and tables (run these commands separately in terminal)
 # rails generate model Studio name:string
 # rails generate model Movie title:string year_released:integer rated:string studio:references
 # rails generate model Actor name:string
@@ -217,3 +217,4 @@ roles.each do |role|
   puts "#{movie["title"].ljust(24)} #{actor["name"].ljust(20)} #{role["character_name"]}"
 end
 
+# Run rails runner kmdb.rb to execute this code
